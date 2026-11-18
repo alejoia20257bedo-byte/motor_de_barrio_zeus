@@ -1,7 +1,6 @@
 // ==========================================
 // PROYECTO: MOTOR DE LÓGICA - GIMNASIO
 // ==========================================
-
 const registros = [
   // DÍA 1 (Lunes)
   { persona: "Carlos Mendoza", categoria: "Mensualidad", dia: 1, valor: 85000, metodoPago: "Transferencia" },
@@ -63,7 +62,7 @@ function listarTodo(datos) {
   let listado = "";
 
   for (let i = 0; i < datos.length; i++) {
-    listado += mostrarRegistro(datos[i]);
+    listado = listado + mostrarRegistro(datos[i]);
     if (i < datos.length - 1) {
       listado += "\n";
     }
@@ -79,9 +78,66 @@ console.log(listarTodo([])); // Caso borde: arreglo vacío
 // ==========================================
 
 // Aquí implementaremos mostrarRegistro y listarTodo
+function totalGeneral(datos) {
+  let suma = 0
+  for(let i = 0; i < datos.length;i++){
+    suma = suma + datos[i].valor;
+  }
+  return suma;
+}
+function promedio(datos) {
+  if (datos.length === 0) return 0
+  let sumaTotal = totalGeneral(datos)
+  let resultado = sumaTotal / datos.length
+  return resultado
+}
+function registroMayor(datos) {
+  if (datos.length === 0) return null
+  let mayor = datos[0]
+  for (let i = 1; i < datos.length; i++) {
+    let actual = datos[i];
+    if (actual && actual.valor > mayor.valor) {
+      mayor = actual;
+    }
+  }
+  return mayor;
+}
+function filtrarPorCategoria(datos, categoria) {
+  let filtrados = []
+  for (let i = 0; i < datos.length; i++) {
+    if (datos[i].categoria === categoria) {
+      filtrados.push(datos[i])
+    } 
+  }
+  return filtrados
+}
+function totalesPorCategoria(datos) {
+  let resumen = {}
+  for(let i = 0; i < datos.length; i++){
+    let categoria = datos[i].categoria
+    let monto = datos[i].valor
+    if (resumen[categoria] === undefined) {
+      resumen[categoria] = monto
+    } else {
+      resumen[categoria] += monto
+    }
+  }
+  return resumen
+}
 
 // ==========================================
 // ZONA DE PRUEBAS
+console.log("--- NIVEL 2 ---");
+console.log(totalGeneral(registros))
+console.log(totalGeneral([]))
+console.log(promedio(registros))
+console.log(promedio([]))
+console.log(registroMayor(registros))
+console.log(registroMayor([]))
+console.log(filtrarPorCategoria(registros, "Mensualidad"))
+console.log(filtrarPorCategoria([], "Mensualidad"))
+console.log(totalesPorCategoria(registros))
+console.log(totalesPorCategoria([]))
 // ==========================================
 // console.log("Total de registros cargados:", registros.length);
 
