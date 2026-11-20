@@ -125,6 +125,94 @@ function totalesPorCategoria(datos) {
   return resumen
 }
 
+// ---------- NIVEL 3 · Set y Map ----------
+
+function personasUnicas(datos) {
+  const unicos = new Set();
+  for (let i = 0; i < datos.length; i++) {
+    unicos.add(datos[i].persona);
+  }
+  const resultado = [];
+  for (const persona of unicos) {
+    resultado.push(persona);
+  }
+  return resultado;
+}
+
+function recurrentesLento(datos) {
+  let pasos = 0;
+  const recurrentes = [];
+  const yaAgregados = new Set();
+
+  for (let i = 0; i < datos.length; i++) {
+    for (let j = 0; j < datos.length; j++) {
+      pasos++;
+      if (i !== j && datos[i].persona === datos[j].persona) {
+        if (!yaAgregados.has(datos[i].persona)) {
+          yaAgregados.add(datos[i].persona);
+          recurrentes.push(datos[i].persona);
+        }
+      }
+    }
+  }
+  return { recurrentes, pasos };
+}
+
+function recurrentesRapido(datos) {
+  let pasos = 0;
+  const conteo = new Map();
+  const recurrentes = [];
+
+  for (let i = 0; i < datos.length; i++) {
+    pasos++;
+    const persona = datos[i].persona;
+    const actual = conteo.get(persona) || 0;
+    conteo.set(persona, actual + 1);
+  }
+  for (const [persona, cantidad] of conteo) {
+    pasos++;
+    if (cantidad > 1) {
+      recurrentes.push(persona);
+    }
+  }
+  return { recurrentes, pasos };
+}
+
+function categoriaEstrella(datos) {
+  if (datos.length === 0) return null;
+
+  const acumulado = new Map();
+  for (let i = 0; i < datos.length; i++) {
+    const cat = datos[i].categoria;
+    const totalActual = acumulado.get(cat) || 0;
+    acumulado.set(cat, totalActual + datos[i].valor);
+  }
+
+  let mejorCategoria = null;
+  let maxVenta = -Infinity;
+
+  for (const [categoria, total] of acumulado) {
+    if (total > maxVenta) {
+      maxVenta = total;
+      mejorCategoria = categoria;
+    }
+  }
+  return mejorCategoria;
+}
+
+function parQueSuma(datos, objetivo) {
+  const vistos = new Map();
+
+  for (let i = 0; i < datos.length; i++) {
+    const complemento = objetivo - datos[i].valor;
+    if (vistos.has(complemento)) {
+      return [vistos.get(complemento), datos[i]];
+    }
+    vistos.set(datos[i].valor, datos[i]);
+  }
+  return null;
+}
+
 // ==========================================
 // ZONA DE PRUEBAS
 console.log("--- NIVEL 2 ---");
