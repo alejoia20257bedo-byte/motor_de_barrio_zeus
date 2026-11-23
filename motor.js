@@ -70,17 +70,12 @@ function listarTodo(datos) {
 
   return listado;
 }
-// ---------- ZONA DE PRUEBAS ----------
-console.log("--- NIVEL 1 ---");
-console.log(mostrarRegistro(registros[0]));
-console.log(listarTodo(registros));
-console.log(listarTodo([])); // Caso borde: arreglo vacío
-// ==========================================
 
+// ---------- NIVEL 2 ----------------
 // Aquí implementaremos mostrarRegistro y listarTodo
 function totalGeneral(datos) {
   let suma = 0
-  for(let i = 0; i < datos.length;i++){
+  for (let i = 0; i < datos.length; i++) {
     suma = suma + datos[i].valor;
   }
   return suma;
@@ -107,13 +102,13 @@ function filtrarPorCategoria(datos, categoria) {
   for (let i = 0; i < datos.length; i++) {
     if (datos[i].categoria === categoria) {
       filtrados.push(datos[i])
-    } 
+    }
   }
   return filtrados
 }
 function totalesPorCategoria(datos) {
   let resumen = {}
-  for(let i = 0; i < datos.length; i++){
+  for (let i = 0; i < datos.length; i++) {
     let categoria = datos[i].categoria
     let monto = datos[i].valor
     if (resumen[categoria] === undefined) {
@@ -144,9 +139,13 @@ function recurrentesLento(datos) {
   const recurrentes = [];
   const yaAgregados = new Set();
 
+  // Toma un recibo fijo (por ejemplo, el recibo 0 de "Carlos Mendoza").
   for (let i = 0; i < datos.length; i++) {
+    // j recorre toda la lista desde el 0 hasta el final para compararlo contra cada recibo existente.
     for (let j = 0; j < datos.length; j++) {
       pasos++;
+      // Verifica que no estemos comparando un recibo consigo mismo
+      // Verifica que los dos recibos pertenezcan a la misma persona en posiciones diferentes de la lista (es decir, vino al menos dos veces).
       if (i !== j && datos[i].persona === datos[j].persona) {
         if (!yaAgregados.has(datos[i].persona)) {
           yaAgregados.add(datos[i].persona);
@@ -189,6 +188,7 @@ function categoriaEstrella(datos) {
   }
 
   let mejorCategoria = null;
+  // es el número más pequeño posible que existe — es menor que cualquier número negativo
   let maxVenta = -Infinity;
 
   for (const [categoria, total] of acumulado) {
@@ -200,6 +200,7 @@ function categoriaEstrella(datos) {
   return mejorCategoria;
 }
 
+// busca dos registros distintos del arreglo datos cuyos montos (valor) sumados den exactamente el número objetivo, y lo logra en una sola pasada gracias a un Map.
 function parQueSuma(datos, objetivo) {
   const vistos = new Map();
 
@@ -210,23 +211,101 @@ function parQueSuma(datos, objetivo) {
     }
     vistos.set(datos[i].valor, datos[i]);
   }
+  // Si termina de revisar toda la lista (o si datos venía vacío []) sin encontrar ninguna pareja que sume el objetivo, devuelve null de forma controlada.
   return null;
 }
 
+
+// ---------- NIVEL 4 · Cola y pila ----------
+
+const colaDeAtencion = [];
+
+function llegar(persona) {
+  if (!persona) {
+    return "Debe ingresar un nombre válido.";
+  }
+  colaDeAtencion.push(persona);
+  return `${persona} ingresó a la fila. Turnos en espera: ${colaDeAtencion.length}`;
+}
+
+function atender() {
+  if (colaDeAtencion.length === 0) {
+    return "No hay personas en la fila.";
+  }
+  const atendido = colaDeAtencion.shift();
+  return `Atendiendo a: ${atendido}`;
+}
+
+const historial = [];
+
+function agregarRegistro(datos, registro) {
+  if (!registro) {
+    return "Registro no válido.";
+  }
+  datos.push(registro);
+  historial.push(registro);
+  return `Registro agregado: ${registro.persona} ($${registro.valor})`;
+}
+
+function deshacer(datos) {
+  if (historial.length === 0) {
+    return "No hay acciones recientes para deshacer.";
+  }
+  const ultimo = historial.pop();
+  datos.pop();
+  return `Se deshizo el registro de ${ultimo.persona} ($${ultimo.valor})`;
+}
+
+
+
+
 // ==========================================
 // ZONA DE PRUEBAS
-console.log("--- NIVEL 2 ---");
-console.log(totalGeneral(registros))
-console.log(totalGeneral([]))
-console.log(promedio(registros))
-console.log(promedio([]))
-console.log(registroMayor(registros))
-console.log(registroMayor([]))
-console.log(filtrarPorCategoria(registros, "Mensualidad"))
-console.log(filtrarPorCategoria([], "Mensualidad"))
-console.log(totalesPorCategoria(registros))
-console.log(totalesPorCategoria([]))
-// ==========================================
-// console.log("Total de registros cargados:", registros.length);
+// ---------- ZONA DE PRUEBAS ----------
 
+console.log("=== NIVEL 1: DATOS ===");
+console.log("Primer registro:", mostrarRegistro(registros[0]));
+console.log("Listado completo:\n" + listarTodo(registros));
+console.log("Caso borde vacío:", listarTodo([]));
 
+console.log("\n=== NIVEL 2: REPORTES ===");
+console.log("Total general:", totalGeneral(registros));
+console.log("Total vacío:", totalGeneral([]));
+console.log("Promedio:", promedio(registros));
+console.log("Promedio vacío:", promedio([]));
+console.log("Registro mayor:", registroMayor(registros));
+console.log("Registro mayor vacío:", registroMayor([]));
+console.log("Filtrar 'Mensualidad':", filtrarPorCategoria(registros, "Mensualidad"));
+console.log("Filtrar vacío:", filtrarPorCategoria([], "Mensualidad"));
+console.log("Totales por categoría:", totalesPorCategoria(registros));
+console.log("Totales por categoría vacío:", totalesPorCategoria([]));
+
+console.log("\n=== NIVEL 3: SET Y MAP ===");
+console.log("Personas únicas:", personasUnicas(registros));
+console.log("Personas únicas vacío:", personasUnicas([]));
+console.log("Recurrentes Lento (O(n²)):", recurrentesLento(registros));
+console.log("Recurrentes Rápido (O(n)):", recurrentesRapido(registros));
+console.log("Categoría estrella:", categoriaEstrella(registros));
+console.log("Categoría estrella vacío:", categoriaEstrella([]));
+console.log("Par que suma $140.000:", parQueSuma(registros, 140000));
+console.log("Par que suma vacío:", parQueSuma([], 140000));
+
+console.log("\n=== NIVEL 4: COLA Y PILA ===");
+console.log(llegar("Carlos Mendoza"));
+console.log(llegar("Laura Gómez"));
+console.log(atender());
+console.log(atender());
+console.log("Caso borde fila vacía:", atender());
+
+const nuevoIngreso = {
+  persona: "Elena Díaz",
+  categoria: "Clases Grupales",
+  dia: 7,
+  valor: 30000,
+  metodoPago: "Efectivo"
+};
+console.log(agregarRegistro(registros, nuevoIngreso));
+console.log("Total tras agregar:", registros.length);
+console.log(deshacer(registros));
+console.log("Total tras deshacer:", registros.length);
+console.log("Caso borde historial vacío:", deshacer(registros));
