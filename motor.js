@@ -67,7 +67,6 @@ function listarTodo(datos) {
       listado += "\n";
     }
   }
-
   return listado;
 }
 
