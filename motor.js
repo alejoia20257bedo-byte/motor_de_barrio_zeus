@@ -1,6 +1,5 @@
-// ==========================================
 // PROYECTO: MOTOR DE LÓGICA - GIMNASIO
-// ==========================================
+
 const registros = [
   // DÍA 1 (Lunes)
   { persona: "Carlos Mendoza", categoria: "Mensualidad", dia: 1, valor: 85000, metodoPago: "Transferencia" },
@@ -71,7 +70,7 @@ function listarTodo(datos) {
 }
 
 // ---------- NIVEL 2 ----------------
-// Aquí implementaremos mostrarRegistro y listarTodo
+// Implementamos mostrarRegistro y listarTodo
 function totalGeneral(datos) {
   let suma = 0
   for (let i = 0; i < datos.length; i++) {
@@ -258,8 +257,6 @@ function deshacer(datos) {
 
 
 
-// ==========================================
-// ZONA DE PRUEBAS
 // ---------- ZONA DE PRUEBAS ----------
 
 console.log("=== NIVEL 1: DATOS ===");
