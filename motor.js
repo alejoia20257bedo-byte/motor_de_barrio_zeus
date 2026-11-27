@@ -46,6 +46,7 @@ const registros = [
 
 // ---------- NIVEL 1 · Datos ----------
 
+// Convierte un registro en una línea de texto para mostrar sus datos de forma legible.
 function mostrarRegistro(registro) {
   if (!registro) {
     return "Registro no válido";
@@ -53,6 +54,7 @@ function mostrarRegistro(registro) {
   return `Día ${registro.dia} · ${registro.persona} · ${registro.categoria} · $${registro.valor} (${registro.metodoPago})`;
 }
 
+// Reúne todos los registros en un listado con una línea por registro para facilitar su lectura.
 function listarTodo(datos) {
   if (datos.length === 0) {
     return "No hay registros disponibles.";
@@ -70,7 +72,7 @@ function listarTodo(datos) {
 }
 
 // ---------- NIVEL 2 ----------------
-// Implementamos mostrarRegistro y listarTodo
+// Suma el valor de todos los registros para saber cuánto dinero ingresó.
 function totalGeneral(datos) {
   let suma = 0
   for (let i = 0; i < datos.length; i++) {
@@ -78,12 +80,16 @@ function totalGeneral(datos) {
   }
   return suma;
 }
+
+// Divide el total entre la cantidad de registros para saber cuánto se pagó en promedio.
 function promedio(datos) {
   if (datos.length === 0) return 0
   let sumaTotal = totalGeneral(datos)
   let resultado = sumaTotal / datos.length
   return resultado
 }
+
+// Devuelve el registro con el valor más alto para identificar el pago más grande.
 function registroMayor(datos) {
   if (datos.length === 0) return null
   let mayor = datos[0]
@@ -95,6 +101,8 @@ function registroMayor(datos) {
   }
   return mayor;
 }
+
+// Selecciona los registros de la categoría indicada para consultar sus pagos.
 function filtrarPorCategoria(datos, categoria) {
   let filtrados = []
   for (let i = 0; i < datos.length; i++) {
@@ -104,6 +112,8 @@ function filtrarPorCategoria(datos, categoria) {
   }
   return filtrados
 }
+
+// Suma los valores por categoría para mostrar cuánto dinero ingresó en cada una.
 function totalesPorCategoria(datos) {
   let resumen = {}
   for (let i = 0; i < datos.length; i++) {
@@ -120,6 +130,7 @@ function totalesPorCategoria(datos) {
 
 // ---------- NIVEL 3 · Set y Map ----------
 
+// Usa un Set para listar una sola vez a cada persona que aparece en los registros.
 function personasUnicas(datos) {
   const unicos = new Set();
   for (let i = 0; i < datos.length; i++) {
@@ -132,6 +143,8 @@ function personasUnicas(datos) {
   return resultado;
 }
 
+// Compara cada registro con todos los demás para encontrar personas con dos o más registros.
+// Cuenta las comparaciones para medir el trabajo de este método.
 function recurrentesLento(datos) {
   let pasos = 0;
   const recurrentes = [];
@@ -155,6 +168,8 @@ function recurrentesLento(datos) {
   return { recurrentes, pasos };
 }
 
+// Usa un Map para contar los registros por persona e identificar quién aparece dos o más veces.
+// Cuenta los pasos para comparar el trabajo con el método de los recorridos anidados.
 function recurrentesRapido(datos) {
   let pasos = 0;
   const conteo = new Map();
@@ -175,6 +190,7 @@ function recurrentesRapido(datos) {
   return { recurrentes, pasos };
 }
 
+// Suma los ingresos de cada categoría y devuelve la que más dinero generó.
 function categoriaEstrella(datos) {
   if (datos.length === 0) return null;
 
@@ -198,7 +214,8 @@ function categoriaEstrella(datos) {
   return mejorCategoria;
 }
 
-// busca dos registros distintos del arreglo datos cuyos montos (valor) sumados den exactamente el número objetivo, y lo logra en una sola pasada gracias a un Map.
+// Busca dos registros distintos cuyos valores sumen el monto objetivo.
+// Usa un Map para consultar los valores ya vistos sin recorrer la lista otra vez.
 function parQueSuma(datos, objetivo) {
   const vistos = new Map();
 
@@ -218,6 +235,7 @@ function parQueSuma(datos, objetivo) {
 
 const colaDeAtencion = [];
 
+// Agrega a la persona al final de la fila y le informa cuántos turnos quedan en espera.
 function llegar(persona) {
   if (!persona) {
     return "Debe ingresar un nombre válido.";
@@ -226,6 +244,7 @@ function llegar(persona) {
   return `${persona} ingresó a la fila. Turnos en espera: ${colaDeAtencion.length}`;
 }
 
+// Retira de la fila a la primera persona para atenderla por orden de llegada.
 function atender() {
   if (colaDeAtencion.length === 0) {
     return "No hay personas en la fila.";
@@ -236,6 +255,7 @@ function atender() {
 
 const historial = [];
 
+// Añade el registro a la lista y lo guarda en el historial para poder deshacer la operación.
 function agregarRegistro(datos, registro) {
   if (!registro) {
     return "Registro no válido.";
@@ -245,6 +265,7 @@ function agregarRegistro(datos, registro) {
   return `Registro agregado: ${registro.persona} ($${registro.valor})`;
 }
 
+// Retira el último registro agregado y lo saca del historial para deshacer esa operación.
 function deshacer(datos) {
   if (historial.length === 0) {
     return "No hay acciones recientes para deshacer.";
