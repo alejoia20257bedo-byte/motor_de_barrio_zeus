@@ -150,13 +150,9 @@ function recurrentesLento(datos) {
   const recurrentes = [];
   const yaAgregados = new Set();
 
-  // Toma un recibo fijo (por ejemplo, el recibo 0 de "Carlos Mendoza").
   for (let i = 0; i < datos.length; i++) {
-    // j recorre toda la lista desde el 0 hasta el final para compararlo contra cada recibo existente.
     for (let j = 0; j < datos.length; j++) {
       pasos++;
-      // Verifica que no estemos comparando un recibo consigo mismo
-      // Verifica que los dos recibos pertenezcan a la misma persona en posiciones diferentes de la lista (es decir, vino al menos dos veces).
       if (i !== j && datos[i].persona === datos[j].persona) {
         if (!yaAgregados.has(datos[i].persona)) {
           yaAgregados.add(datos[i].persona);
@@ -202,7 +198,8 @@ function categoriaEstrella(datos) {
   }
 
   let mejorCategoria = null;
-  // es el número más pequeño posible que existe — es menor que cualquier número negativo
+  // -Infinity es menor que cualquier número finito, así que el primer total
+  // se convierte en el máximo inicial aunque sea cero o negativo.
   let maxVenta = -Infinity;
 
   for (const [categoria, total] of acumulado) {
@@ -226,7 +223,6 @@ function parQueSuma(datos, objetivo) {
     }
     vistos.set(datos[i].valor, datos[i]);
   }
-  // Si termina de revisar toda la lista (o si datos venía vacío []) sin encontrar ninguna pareja que sume el objetivo, devuelve null de forma controlada.
   return null;
 }
 
@@ -249,6 +245,7 @@ function atender() {
   if (colaDeAtencion.length === 0) {
     return "No hay personas en la fila.";
   }
+  // shift() quita y devuelve a la primera persona de la fila para atenderla.
   const atendido = colaDeAtencion.shift();
   return `Atendiendo a: ${atendido}`;
 }
@@ -270,7 +267,9 @@ function deshacer(datos) {
   if (historial.length === 0) {
     return "No hay acciones recientes para deshacer.";
   }
+  // pop() quita y devuelve el último registro del historial para mostrar cuál se deshizo.
   const ultimo = historial.pop();
+  // pop() quita el último registro de la lista de pagos para deshacer la incorporación.
   datos.pop();
   return `Se deshizo el registro de ${ultimo.persona} ($${ultimo.valor})`;
 }
